@@ -10,12 +10,14 @@
     "parcel-bundler": "^1.12.5"
   },
   "dependencies": {
-    "@nextui-org/react": "^1.0.2-beta.3",
+    "@wonderlandlabs/mirror": "^0.1.8",
     "axios": "^0.25.0",
     "grommet": "^2.20.1",
     "grommet-icons": "^4.7.0",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
+    "react-loader-spinner": "^5.1.0",
+    "react-router-dom": "^6.2.1",
     "styled-components": "^5.3.3"
   },
   "scripts": {
