@@ -20,9 +20,8 @@ function GithubCsvContent({data, error, loadState}) {
       {
         property: 'isStored',
         header: "Is Stored",
-        render: (value, item) => {
-          console.log('render value item', value, item);
-          return value ? <Checkmark/> : <Close/>;
+        render: ({isStored}) => {
+          return isStored ? <Checkmark/> : <Close/>;
         }
       }
     ]
