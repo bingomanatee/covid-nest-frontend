@@ -3,6 +3,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {Mirror} from '@wonderlandlabs/mirror';
 import axios from "axios";
 import {TailSpin} from "react-loader-spinner";
+import {Checkmark, Close} from "grommet-icons";
 
 function GithubCsvContent({data, error, loadState}) {
   const columns = useMemo(() => {
@@ -10,11 +11,16 @@ function GithubCsvContent({data, error, loadState}) {
       {
         property: 'path',
         header: "Resource Path",
-        primary:  true,
+        primary: true,
       },
       {
         property: 'sha',
         header: 'SHA'
+      },
+      {
+        property: 'isStored',
+        header: "Is Stored",
+        render: (value) => value ? <Checkmark /> : <Close />
       }
     ]
   }, []);
@@ -31,10 +37,10 @@ function GithubCsvContent({data, error, loadState}) {
     case 'loaded':
       return <>
         <DataTable
-        data={data}
-        columns={columns}
-      />
-        </>
+          data={data}
+          columns={columns}
+        />
+      </>
         ;
       break;
 
@@ -60,12 +66,14 @@ export function GithubCsv() {
         onLoad(mir, result) {
           let {data} = result;
           console.log('result: ', result);
-          if (!Array.isArray(data)) {
-            data = [
-              {path: 'foo', sha: 'fooSha'},
-              {path: 'bar', sha: 'barSha'}
-            ];
-           // return mir.$do.onLoadError(new Error('bad data'));
+          if (!Array.isArray(data.files)) {
+            data = {
+              files: [
+                {path: 'foo', sha: 'fooSha'},
+                {path: 'bar', sha: 'barSha'}
+              ]
+            };
+            // return mir.$do.onLoadError(new Error('bad data'));
           }
           mir.$do.setData(data);
           mir.$do.setLoadState('loaded');
