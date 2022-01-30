@@ -75,7 +75,7 @@ export function GithubCsv() {
             };
             // return mir.$do.onLoadError(new Error('bad data'));
           }
-          mir.$do.setData(data);
+          mir.$do.setData(data.files);
           mir.$do.setLoadState('loaded');
         },
         onLoadError(mir, err) {
