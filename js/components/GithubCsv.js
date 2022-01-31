@@ -9,7 +9,7 @@ import _ from 'lodash';
 function makeClick(path) {
   return _.once(
    () => {
-    axios.put('/api/github-csv/' + path);
+    axios.put('/api/github-csv', {path});
   });
 }
 
