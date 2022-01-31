@@ -1,9 +1,17 @@
-import {DataTable, Heading, Paragraph, Text} from "grommet";
+import {Button, DataTable, Heading, Paragraph, Text} from "grommet";
 import React, {useEffect, useMemo, useState} from 'react';
 import {Mirror} from '@wonderlandlabs/mirror';
 import axios from "axios";
 import {TailSpin} from "react-loader-spinner";
-import {Checkmark, Close} from "grommet-icons";
+import {Checkmark, Close, Github} from "grommet-icons";
+import _ from 'lodash';
+
+function makeClick(path) {
+  return _.once(
+   (path) => {
+    axios.put('/api/github-csv/' + path);
+  });
+}
 
 function GithubCsvContent({data, error, loadState}) {
   const columns = useMemo(() => {
@@ -23,6 +31,10 @@ function GithubCsvContent({data, error, loadState}) {
         render: ({isStored}) => {
           return isStored ? <Checkmark/> : <Close/>;
         }
+      },
+      {
+        header: 'Write To S3',
+        render: ({path}) => <Button onClick={makeClick(path)} icon={<Github />} label={'Write to S3'} />
       }
     ]
   }, []);
