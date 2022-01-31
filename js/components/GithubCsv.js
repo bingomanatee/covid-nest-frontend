@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 function makeClick(path) {
   return _.once(
-   (path) => {
+   () => {
     axios.put('/api/github-csv/' + path);
   });
 }
