@@ -52,8 +52,8 @@ export function GithubCsvContent({mir, data, showInfoPath, error, loadState, sou
 
   function makeSavedClick(path) {
     return () => {
-      console.log('setting showInfoPath to ', path);
-      mir.$do.setShowInfoPath(path);
+      console.log('setting showInfoPath to ', path, 'with mir', mir);
+      mir ? mir.$do.setShowInfoPath(path) : null;
     }
   }
 
