@@ -78,10 +78,10 @@ export function GithubCsv() {
 
   const {error, data, loadState} = values;
   console.log('VALUES:', values);
-  return <>
+  return mir ? <>
     <Heading>Github CSV files</Heading>
     <Paragraph>The root source files</Paragraph>
     {error ? <Text color="status-error">{error}</Text> : ''}
     <GithubCsvContent mir={mir} {...values} />
-  </>;
+  </> : '';
 }
