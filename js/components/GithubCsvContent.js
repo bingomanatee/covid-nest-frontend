@@ -12,7 +12,15 @@ function makeClick(path) {
     });
 }
 
-function S3FileInfo({sourceFiles, showInfoPath}) {
+function S3FileInfo({ mir,sourceFiles, showInfoPath}) {
+  const closeClick = useMemo(() => {
+    return () => {
+      if (mir) {
+        mir.$do.setShowInfoPath('');
+      }
+    }
+  }, [mir]);
+
   if (!showInfoPath) return '';
   const currentFile = Array.isArray(sourceFiles)  ? sourceFiles.find((file) => file.path === showInfoPath) : null;
   if (!currentFile) return '';
@@ -38,12 +46,11 @@ function S3FileInfo({sourceFiles, showInfoPath}) {
         ]}
       />
     </CardBody>
-    <CardFooter pad={{horizontal: "small"}} background="light-2">
+    <CardFooter pad={{horizontal: "small"}} background="light-2" onClick={closeClick} >
       <Button
-        icon={<Icons.Favorite color="red" />}
+        icon={<Close color="red" />}
         hoverIndicator
       />
-      <Button icon={<Icons.ShareOption color="plain" />} hoverIndicator />
     </CardFooter>
   </Card>
 }
@@ -98,7 +105,7 @@ export function GithubCsvContent({mir, data, showInfoPath, error, loadState, sou
     case 'loaded':
       return <>
         {showInfoPath ? <Text>Show Info Path: <b>{showInfoPath}</b></Text> : ''}
-        <S3FileInfo sourceFiles={sourceFiles} showInfoPath={showInfoPath} />
+        <S3FileInfo mir={mir} sourceFiles={sourceFiles} showInfoPath={showInfoPath} />
         <DataTable
           data={data}
           columns={columns}
