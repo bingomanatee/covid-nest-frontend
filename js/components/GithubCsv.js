@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {Mirror} from '@wonderlandlabs/mirror';
 import axios from "axios";
 import {GithubCsvContent} from "./GithubCsvContent";
+import {S3FileInfo} from "./S3FileInfo";
 
 export function GithubCsv() {
   const [values, setValues] = useState({});
@@ -76,12 +77,13 @@ export function GithubCsv() {
   }, [])
 
 
-  const {error, data, loadState} = values;
+  const {error, sourceFiles, showInfoPath} = values;
   console.log('VALUES:', values);
-  return mir ? <>
+  return mir ? <Box flex>
     <Heading>Github CSV files</Heading>
     <Paragraph>The root source files</Paragraph>
     {error ? <Text color="status-error">{error}</Text> : ''}
+    <S3FileInfo mir={mir} sourceFiles={sourceFiles} showInfoPath={showInfoPath}/>
     <GithubCsvContent mir={mir} {...values} />
-  </> : '';
+  </Box> : '';
 }

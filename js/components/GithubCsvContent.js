@@ -1,59 +1,16 @@
 import _ from "lodash";
 import axios from "axios";
-import React, {useMemo, useState} from "react";
+import React, {useMemo} from "react";
 import {Checkmark, Close, Github, Info} from "grommet-icons";
-import {Button, Box, List, Card, CardBody, CardFooter, CardHeader, DataTable, Text} from "grommet";
+import {Box, Button, DataTable, Text} from "grommet";
 import {TailSpin} from "react-loader-spinner";
+import {S3FileInfo} from "./S3FileInfo";
 
 function makeClick(path) {
   return _.once(
     () => {
       axios.put('/api/github-csv', {path});
     });
-}
-
-function S3FileInfo({ mir,sourceFiles, showInfoPath}) {
-  const closeClick = useMemo(() => {
-    return () => {
-      if (mir) {
-        mir.$do.setShowInfoPath('');
-      }
-    }
-  }, [mir]);
-
-  if (!showInfoPath) return '';
-  const currentFile = Array.isArray(sourceFiles)  ? sourceFiles.find((file) => file.path === showInfoPath) : null;
-  if (!currentFile) return '';
-  return <Box flex>
-    <Card  height="small" width="small" background="light-1">
-    <CardHeader pad="medium">File &quot;{ currentFile.path }</CardHeader>
-    <CardBody pad="medium">
-      <List
-        primaryKey="label"
-        secondaryKey="value"
-        data={[
-          {
-            label: 'Size',
-            value: currentFile.file_size
-          },
-          {
-            label: 'Save Started',
-            value: currentFile.save_started? save_started.toString() : '--'
-          },
-          {
-            label: 'Save Finished',
-            value: currentFile.save_finished? save_started.toString() : '--'
-          }
-        ]}
-      />
-    </CardBody>
-    <CardFooter pad={{horizontal: "small"}} background="light-2" onClick={closeClick} >
-      <Button
-        icon={<Close color="red" />}
-        hoverIndicator
-      />
-    </CardFooter>
-  </Card>  </Box>
 }
 
 export function GithubCsvContent({mir, data, showInfoPath, error, loadState, sourceFiles}) {
@@ -104,14 +61,13 @@ export function GithubCsvContent({mir, data, showInfoPath, error, loadState, sou
       break;
 
     case 'loaded':
-      return <>
+      return <Box direction={'column'} flex>
         {showInfoPath ? <Text>Show Info Path: <b>{showInfoPath}</b></Text> : ''}
-        <S3FileInfo mir={mir} sourceFiles={sourceFiles} showInfoPath={showInfoPath} />
         <DataTable
           data={data}
           columns={columns}
         />
-      </>
+      </Box>
         ;
       break;
 
