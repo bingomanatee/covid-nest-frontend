@@ -96,6 +96,7 @@ export function GithubCsvContent({mir, data, showInfoPath, error, loadState, sou
 
     case 'loaded':
       return <>
+        <Text>Show Info Path: <b>{showInfoPath}</b></Text>
         <S3FileInfo sourceFiles={sourceFiles} showInfoPath={showInfoPath} />
         <DataTable
           data={data}
