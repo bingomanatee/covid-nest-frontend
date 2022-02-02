@@ -1,4 +1,4 @@
-import {Heading, Paragraph, Text} from "grommet";
+import {Box, Heading, Paragraph, Text} from "grommet";
 import React, {useEffect, useState} from 'react';
 import {Mirror} from '@wonderlandlabs/mirror';
 import axios from "axios";
