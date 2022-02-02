@@ -24,7 +24,7 @@ function S3FileInfo({ mir,sourceFiles, showInfoPath}) {
   if (!showInfoPath) return '';
   const currentFile = Array.isArray(sourceFiles)  ? sourceFiles.find((file) => file.path === showInfoPath) : null;
   if (!currentFile) return '';
-  return <Box>
+  return <Box flex>
     <Card  height="small" width="small" background="light-1">
     <CardHeader pad="medium">File &quot;{ currentFile.path }</CardHeader>
     <CardBody pad="medium">
