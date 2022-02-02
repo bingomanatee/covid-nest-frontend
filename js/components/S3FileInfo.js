@@ -1,5 +1,5 @@
 import React, {useMemo} from "react";
-import {Box, Button, Card, CardBody, CardFooter, CardHeader, List} from "grommet";
+import {Box, Button, Card, CardBody, CardFooter, CardHeader, List, Text} from "grommet";
 import {Close} from "grommet-icons";
 
 export function S3FileInfo({mir, sourceFiles, showInfoPath}) {
@@ -19,11 +19,13 @@ export function S3FileInfo({mir, sourceFiles, showInfoPath}) {
   if (!currentFile) {
     return '';
   }
-  return <Box flex>
-    <Card height="small" width="small" background="light-1">
-      <CardHeader pad="medium">File &quot;{currentFile.path}</CardHeader>
-      <CardBody pad="medium">
+  return (
+  <div>
+  <Card background="light-1" margin="large" height="300px" flex>
+      <CardHeader pad="medium"><Text>File &quot;{currentFile.path}&quot;</Text></CardHeader>
+      <CardBody pad="medium" flex>
         <List
+        flex
           primaryKey="label"
           secondaryKey="value"
           data={[
@@ -33,21 +35,23 @@ export function S3FileInfo({mir, sourceFiles, showInfoPath}) {
             },
             {
               label: 'Save Started',
-              value: currentFile.save_started ? save_started.toString() : '--'
+              value: currentFile.save_started ? currentFile.save_started.toString() : '--'
             },
             {
               label: 'Save Finished',
-              value: currentFile.save_finished ? save_started.toString() : '--'
+              value: currentFile.save_finished ? currentFile.save_finished.toString() : '--'
             }
           ]}
         />
       </CardBody>
-      <CardFooter pad={{horizontal: "small"}} background="light-2" onClick={closeClick}>
-        <Button
+      <CardFooter pad={{horizontal: "small"}} background="light-2" >
+        <Button onClick={closeClick}
           icon={<Close color="red"/>}
           hoverIndicator
+          label="Close"
         />
       </CardFooter>
     </Card>
-  </Box>
+    </div>
+    );
 }
