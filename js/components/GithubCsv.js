@@ -1,80 +1,22 @@
-import {Button, DataTable, Heading, Paragraph, Text} from "grommet";
-import React, {useEffect, useMemo, useState} from 'react';
+import {Heading, Paragraph, Text} from "grommet";
+import React, {useEffect, useState} from 'react';
 import {Mirror} from '@wonderlandlabs/mirror';
 import axios from "axios";
-import {TailSpin} from "react-loader-spinner";
-import {Checkmark, Close, Github} from "grommet-icons";
-import _ from 'lodash';
-
-function makeClick(path) {
-  return _.once(
-   () => {
-    axios.put('/api/github-csv', {path});
-  });
-}
-
-function GithubCsvContent({data, error, loadState}) {
-  const columns = useMemo(() => {
-    return [
-      {
-        property: 'path',
-        header: "Resource Path",
-        primary: true,
-      },
-      {
-        property: 'sha',
-        header: 'SHA'
-      },
-      {
-        property: 'isStored',
-        header: "Is Stored",
-        render: ({isStored}) => {
-          return isStored ? <Checkmark/> : <Close/>;
-        }
-      },
-      {
-        header: 'Write To S3',
-        render: ({path}) => <Button onClick={makeClick(path)} icon={<Github />} label={'Write to S3'} />
-      }
-    ]
-  }, []);
-
-  switch (loadState) {
-    case 'start':
-      return <TailSpin/>;
-      break;
-
-    case 'loading':
-      return <TailSpin/>;
-      break;
-
-    case 'loaded':
-      return <>
-        <DataTable
-          data={data}
-          columns={columns}
-        />
-      </>
-        ;
-      break;
-
-    case 'error':
-      return <Text color="status-error">{error}</Text>;
-      break;
-
-    default:
-      return <Text>Waiting to Load</Text>;
-  }
-}
+import {GithubCsvContent} from "./GithubCsvContent";
 
 export function GithubCsv() {
   const [values, setValues] = useState({});
+  const [mir, setMir] = useState(null);
 
   useEffect(() => {
     const dataMir = new Mirror({
       data: [],
       loadState: 'start',
-      error: ''
+      error: false,
+      sourceFiles: [],
+      sourceFilesLoadState: 'start',
+      sourceFilesError: false,
+      showInfoPath: '',
     }, {
       actions: {
         onLoad(mir, result) {
@@ -90,6 +32,7 @@ export function GithubCsv() {
             // return mir.$do.onLoadError(new Error('bad data'));
           }
           mir.$do.setData(data.files);
+          mir.$do.setError(false);
           mir.$do.setLoadState('loaded');
         },
         onLoadError(mir, err) {
@@ -105,12 +48,30 @@ export function GithubCsv() {
           axios.get('/api/github-csv')
             .then(mir.$do.onLoad)
             .catch(mir.$do.onLoadError);
+        },
+        onLoadSourceFiles(mir, result) {
+          mir.$do.setSourceFiles(result.data);
+          mir.$do.setSourceFilesLoadStatus('loaded');
+          mir.$do.setSourceFilesError(false);
+        },
+        onLoadSourceFileError(err) {
+          mir.$do.setSourceFilesError(err.message);
+          mir.$do.setSourceFilesLoadStatus('error');
+        },
+        loadSourceFiles(mir) {
+          mir.$do.setSourceFilesLoadStatus('starting');
+          axios.get('/api/source-files')
+            .then(mir.$do.onLoadSourceFiles)
+            .catch(mir.$do.onLoadSourceFileError);
         }
       }
     });
 
+    setMir(dataMir);
+
     dataMir.subscribe(setValues);
     dataMir.$do.load();
+    dataMir.$do.loadSourceFiles();
 
   }, [])
 
@@ -121,6 +82,6 @@ export function GithubCsv() {
     <Heading>Github CSV files</Heading>
     <Paragraph>The root source files</Paragraph>
     {error ? <Text color="status-error">{error}</Text> : ''}
-    <GithubCsvContent {...values} />
+    <GithubCsvContent mir={mir} {...values} />
   </>;
 }
