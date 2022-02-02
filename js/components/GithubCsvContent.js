@@ -2,7 +2,7 @@ import _ from "lodash";
 import axios from "axios";
 import React, {useMemo, useState} from "react";
 import {Checkmark, Close, Github, Info} from "grommet-icons";
-import {Button, List, Card, CardBody, CardFooter, CardHeader, DataTable, Text} from "grommet";
+import {Button, Box, List, Card, CardBody, CardFooter, CardHeader, DataTable, Text} from "grommet";
 import {TailSpin} from "react-loader-spinner";
 
 function makeClick(path) {
@@ -24,7 +24,8 @@ function S3FileInfo({ mir,sourceFiles, showInfoPath}) {
   if (!showInfoPath) return '';
   const currentFile = Array.isArray(sourceFiles)  ? sourceFiles.find((file) => file.path === showInfoPath) : null;
   if (!currentFile) return '';
-  return <Card  height="small" width="small" background="light-1">
+  return <Box>
+    <Card  height="small" width="small" background="light-1">
     <CardHeader pad="medium">File &quot;{ currentFile.path }</CardHeader>
     <CardBody pad="medium">
       <List
@@ -52,7 +53,7 @@ function S3FileInfo({ mir,sourceFiles, showInfoPath}) {
         hoverIndicator
       />
     </CardFooter>
-  </Card>
+  </Card>  </Box>
 }
 
 export function GithubCsvContent({mir, data, showInfoPath, error, loadState, sourceFiles}) {
