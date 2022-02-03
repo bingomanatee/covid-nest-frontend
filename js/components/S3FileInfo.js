@@ -1,7 +1,12 @@
 import React, {useMemo} from "react";
 import {Box, Button, Card, CardBody, CardFooter, CardHeader, List, Text} from "grommet";
 import {Close} from "grommet-icons";
+import numeral from 'numeral';
 
+function sizeNum(n) {
+  if (!(typeof n === 'number')) return '--';
+  return numeral(n).format('0,0')
+}
 export function S3FileInfo({mir, sourceFiles, showInfoPath}) {
   const closeClick = useMemo(() => {
     return () => {
@@ -31,7 +36,7 @@ export function S3FileInfo({mir, sourceFiles, showInfoPath}) {
           data={[
             {
               label: 'Size',
-              value: currentFile.file_size
+              value: sizeNum(currentFile.file_size)
             },
             {
               label: 'Save Started',

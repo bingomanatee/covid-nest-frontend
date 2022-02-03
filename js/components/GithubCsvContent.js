@@ -5,6 +5,7 @@ import {Checkmark, Close, Github, Info} from "grommet-icons";
 import {Box, Button, DataTable, Text} from "grommet";
 import {TailSpin} from "react-loader-spinner";
 import {S3FileInfo} from "./S3FileInfo";
+import numeral from 'numeral';
 
 function makeClick(path) {
   return _.once(
@@ -23,6 +24,7 @@ export function GithubCsvContent({mir, data, showInfoPath, error, loadState, sou
   }
 
   const columns = useMemo(() => {
+    axios.get('/api/github-csv/fileinfo'); // test of task logic
     return [
       {
         property: 'path',
@@ -32,6 +34,17 @@ export function GithubCsvContent({mir, data, showInfoPath, error, loadState, sou
       {
         property: 'sha',
         header: 'SHA'
+      }, 
+      {
+        property: 'size',
+        header: 'Size (byutes)',
+        render: (data) => (
+        <Box fill="horizontal" align="end">
+        <Text alignSelf="end" textAlign="end">
+        {numeral(data.size).format('0,0')}
+        </Text>
+        </Box>
+        )
       },
       {
         property: 'isStored',
