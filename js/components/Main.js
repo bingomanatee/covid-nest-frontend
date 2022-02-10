@@ -4,6 +4,7 @@ import theme from './../../theme.json';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {Intro} from "./Intro";
 import {GithubCsv} from "./GithubCsv";
+import {Locations} from './Locations';
 import {SiteHeader} from "./SiteHeader";
 
 
@@ -17,6 +18,8 @@ export default () => {
 
           <Routes>
             <Route path="/" element={<Intro/>}>
+            </Route>
+            <Route path="/locationss" element={<Locations/>}>
             </Route>
             <Route path="/github-csv" element={<GithubCsv/>}/>
             <Route path="*" element={<Intro />} />
