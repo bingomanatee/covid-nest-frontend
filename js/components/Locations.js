@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {Mirror} from '@wonderlandlabs/mirror';
 import axios from "axios";
 import {LocationsContent} from "./LocationsContent";
+import _ from 'lodash';
 
 export function Locations() {
   const [values, setValues] = useState({});
@@ -13,10 +14,14 @@ export function Locations() {
       loadState: 'start',
       error: false,
       locations: [],
-      locationsLoadState: 'start',
-      locationsError: false,
+      stateSearchString: '',
       showInfoPath: '',
     }, {
+      selectors: {
+        states ({locations, stateSearchString}) {
+          return _(locations).map('province_state').uniq().sortBy().value();
+        }
+      },
       actions: {
         onLoad(mir, result) {
           let {data} = result;
@@ -36,15 +41,9 @@ export function Locations() {
             mir.$do.setError('load error');
           }
         },
-        load(mir) {
-          mir.$do.setLoadState('loading');
-          axios.get('/api/locations')
-            .then(mir.$do.onLoad)
-            .catch(mir.$do.onLoadError);
-        },
         onLoadLocations(mir, result) {
           mir.$do.setLocations(result.data);
-          mir.$do.setLocationsLoadStatus('loaded');
+          mir.$do.setLoadState('loaded');
           mir.$do.setLocationsError(false);
         },
         onLoadSourceFileError(err) {
@@ -52,10 +51,10 @@ export function Locations() {
           mir.$do.setLocationsLoadStatus('error');
         },
         loadLocations(mir) {
-          mir.$do.setLocationsLoadStatus('starting');
+          mir.$do.setLoadState('start');
           axios.get('/api/locations')
             .then(mir.$do.onLoadLocations)
-            .catch(mir.$do.onLoadSourceFileError);
+            .catch(mir.$do.onLoadError);
         }
       }
     });
@@ -63,13 +62,12 @@ export function Locations() {
     setMir(dataMir);
 
     dataMir.subscribe(setValues);
-    dataMir.$do.load();
     dataMir.$do.loadLocations();
 
   }, [])
 
 
-  const {error, locations, showInfoPath} = values;
+  const {error} = values;
   return mir ? <Box flex>
     <Heading>Locations</Heading>
     <Paragraph>Aggregate locations for data (in US)</Paragraph>

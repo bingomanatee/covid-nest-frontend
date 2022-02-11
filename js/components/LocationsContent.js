@@ -2,7 +2,7 @@ import _ from "lodash";
 import axios from "axios";
 import React, {useMemo} from "react";
 import {Checkmark, Close, Github, Info} from "grommet-icons";
-import {Box, Button, DataTable, Text} from "grommet";
+import {Box, Button, DataTable, Text, Select} from "grommet";
 import {TailSpin} from "react-loader-spinner";
 import {S3FileInfo} from "./S3FileInfo";
 import numeral from 'numeral';
@@ -14,15 +14,8 @@ function makeClick(path) {
     });
 }
 
-export function LocationsContent({mir, locations, showInfoPath, error, loadState}) {
-
-  function makeSavedClick(path) {
-    return () => {
-      console.log('setting showInfoPath to ', path, 'with mir', mir);
-      mir ? mir.$do.setShowInfoPath(path) : null;
-    }
-  }
-
+export function LocationsContent({mir, locations, showInfoPath, error, loadState, states, stateSearchString}) {
+  console.log('states:', states);
   const columns = useMemo(() => {
     return [
       {
@@ -31,8 +24,12 @@ export function LocationsContent({mir, locations, showInfoPath, error, loadState
         primary: true,
       },
       {
-        property: 'country_regions',
+        property: 'country_region',
         header: "Country",
+      },
+      {
+        property: 'province_state',
+        header: 'State'
       },
       {
         property: 'iso2',
@@ -46,10 +43,6 @@ export function LocationsContent({mir, locations, showInfoPath, error, loadState
         property: 'admin2',
         header: "Region",
       },
-      {
-        property: 'province_state',
-        header: 'state'
-      }
     ]
   }, []);
 
@@ -63,13 +56,22 @@ export function LocationsContent({mir, locations, showInfoPath, error, loadState
       break;
 
     case 'loaded':
-      return <Box direction={'column'} flex>
+      return (
+      <Box direction="row">
+      <Box>
+      <Text>View locations in state:</Text>
+        <Select onSearch={(value) => mir.$do.setStateSearchString(value)} 
+        selectPlaceholder="enter a state name to filter" options={states} />
+        </Box>
         <DataTable
           data={locations}
           columns={columns}
+          fill={true}
+          step={20}
+          paginate={true}
         />
-      </Box>
-        ;
+        </Box>
+        );
       break;
 
     case 'error':
@@ -77,6 +79,6 @@ export function LocationsContent({mir, locations, showInfoPath, error, loadState
       break;
 
     default:
-      return <Text>Waiting to Load</Text>;
+      return <Text>Waiting to Load - {loadState} </Text>;
   }
 }
