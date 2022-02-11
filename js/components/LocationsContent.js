@@ -27,39 +27,29 @@ export function GithubCsvContent({mir, data, showInfoPath, error, loadState, sou
     axios.get('/api/github-csv/fileinfo'); // test of task logic
     return [
       {
-        property: 'path',
-        header: "Resource Path",
+        property: 'uid',
+        header: "UID",
         primary: true,
       },
       {
-        property: 'sha',
-        header: 'SHA'
+        property: 'country_regions',
+        header: "Country",
       },
       {
-        property: 'size',
-        header: 'Size (bytes)',
-        render: (data) => (
-        <Box fill="horizontal" align="end">
-        <Text alignSelf="end" textAlign="end">
-        {numeral(data.size).format('0,0')}
-        </Text>
-        </Box>
-        )
+        property: 'iso2',
+        header: "ISO-2",
       },
       {
-        property: 'isStored',
-        header: "Is Stored",
-        render: ({isStored}) => {
-          return isStored ? <Checkmark/> : <Close/>;
-        }
+        property: 'iso3',
+        header: "ISO-3",
       },
       {
-        header: 'Write To S3',
-        render: ({path}) => <Button onClick={makeClick(path)} icon={<Github/>} label={'Write to S3'}/>
+        property: 'admin2',
+        header: "Region",
       },
       {
-        header: 'Saved Info',
-        render: ({path}) => <Button onClick={makeSavedClick(path)} icon={<Info/>} label={'info'}/>
+        property: 'province_state',
+        header: 'state'
       }
     ]
   }, []);
@@ -75,7 +65,6 @@ export function GithubCsvContent({mir, data, showInfoPath, error, loadState, sou
 
     case 'loaded':
       return <Box direction={'column'} flex>
-        {showInfoPath ? <Text>Show Info Path: <b>{showInfoPath}</b></Text> : ''}
         <DataTable
           data={data}
           columns={columns}

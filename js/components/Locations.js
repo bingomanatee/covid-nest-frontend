@@ -2,10 +2,10 @@ import {Box, Heading, Paragraph, Text} from "grommet";
 import React, {useEffect, useState} from 'react';
 import {Mirror} from '@wonderlandlabs/mirror';
 import axios from "axios";
-import {GithubCsvContent} from "./GithubCsvContent";
+import {LocationsContent} from "./LocationsContent";
 import {S3FileInfo} from "./S3FileInfo";
 
-export function GithubCsv() {
+export function Locations() {
   const [values, setValues] = useState({});
   const [mir, setMir] = useState(null);
 
@@ -14,25 +14,20 @@ export function GithubCsv() {
       data: [],
       loadState: 'start',
       error: false,
-      sourceFiles: [],
-      sourceFilesLoadState: 'start',
-      sourceFilesError: false,
+      locations: [],
+      locationsLoadState: 'start',
+      locationsError: false,
       showInfoPath: '',
     }, {
       actions: {
         onLoad(mir, result) {
           let {data} = result;
-          console.log('result: ', result);
-          if (!Array.isArray(data.files)) {
+          if (!Array.isArray(data)) {
             data = {
-              files: [
-                {path: 'foo', sha: 'fooSha'},
-                {path: 'bar', sha: 'barSha'}
-              ]
             };
             // return mir.$do.onLoadError(new Error('bad data'));
           }
-          mir.$do.setData(data.files);
+          mir.$do.setData(data);
           mir.$do.setError(false);
           mir.$do.setLoadState('loaded');
         },
@@ -46,23 +41,23 @@ export function GithubCsv() {
         },
         load(mir) {
           mir.$do.setLoadState('loading');
-          axios.get('/api/github-csv')
+          axios.get('/api/locations')
             .then(mir.$do.onLoad)
             .catch(mir.$do.onLoadError);
         },
-        onLoadSourceFiles(mir, result) {
-          mir.$do.setSourceFiles(result.data);
-          mir.$do.setSourceFilesLoadStatus('loaded');
-          mir.$do.setSourceFilesError(false);
+        onLoadLocations(mir, result) {
+          mir.$do.setLocations(result.data);
+          mir.$do.setLocationsLoadStatus('loaded');
+          mir.$do.setLocationsError(false);
         },
         onLoadSourceFileError(err) {
-          mir.$do.setSourceFilesError(err.message);
-          mir.$do.setSourceFilesLoadStatus('error');
+          mir.$do.setLocationsError(err.message);
+          mir.$do.setLocationsLoadStatus('error');
         },
-        loadSourceFiles(mir) {
-          mir.$do.setSourceFilesLoadStatus('starting');
+        loadLocations(mir) {
+          mir.$do.setLocationsLoadStatus('starting');
           axios.get('/api/source-files')
-            .then(mir.$do.onLoadSourceFiles)
+            .then(mir.$do.onLoadLocations)
             .catch(mir.$do.onLoadSourceFileError);
         }
       }
@@ -72,18 +67,18 @@ export function GithubCsv() {
 
     dataMir.subscribe(setValues);
     dataMir.$do.load();
-    dataMir.$do.loadSourceFiles();
+    dataMir.$do.loadLocations();
 
   }, [])
 
 
-  const {error, sourceFiles, showInfoPath} = values;
+  const {error, locations, showInfoPath} = values;
   console.log('VALUES:', values);
   return mir ? <Box flex>
     <Heading>Github CSV files</Heading>
     <Paragraph>The root source files</Paragraph>
     {error ? <Text color="status-error">{error}</Text> : ''}
-    <S3FileInfo mir={mir} sourceFiles={sourceFiles} showInfoPath={showInfoPath}/>
-    <GithubCsvContent mir={mir} {...values} />
+    <S3FileInfo mir={mir} locations={locations} showInfoPath={showInfoPath}/>
+    <LocationsContent mir={mir} {...values} />
   </Box> : '';
 }

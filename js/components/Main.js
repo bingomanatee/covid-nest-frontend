@@ -19,7 +19,7 @@ export default () => {
           <Routes>
             <Route path="/" element={<Intro/>}>
             </Route>
-            <Route path="/locationss" element={<Locations/>}>
+            <Route path="/locations" element={<Locations/>}>
             </Route>
             <Route path="/github-csv" element={<GithubCsv/>}/>
             <Route path="*" element={<Intro />} />
