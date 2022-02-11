@@ -14,7 +14,7 @@ function makeClick(path) {
     });
 }
 
-export function LocationsContent({mir, data, showInfoPath, error, loadState, sourceFiles}) {
+export function LocationsContent({mir, locations, showInfoPath, error, loadState}) {
 
   function makeSavedClick(path) {
     return () => {
@@ -24,7 +24,6 @@ export function LocationsContent({mir, data, showInfoPath, error, loadState, sou
   }
 
   const columns = useMemo(() => {
-    axios.get('/api/github-csv/fileinfo'); // test of task logic
     return [
       {
         property: 'uid',
@@ -66,7 +65,7 @@ export function LocationsContent({mir, data, showInfoPath, error, loadState, sou
     case 'loaded':
       return <Box direction={'column'} flex>
         <DataTable
-          data={data}
+          data={locations}
           columns={columns}
         />
       </Box>

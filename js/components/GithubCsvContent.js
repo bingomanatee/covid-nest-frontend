@@ -24,7 +24,6 @@ export function GithubCsvContent({mir, data, showInfoPath, error, loadState, sou
   }
 
   const columns = useMemo(() => {
-    axios.get('/api/github-csv/fileinfo'); // test of task logic
     return [
       {
         property: 'path',

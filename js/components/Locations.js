@@ -71,8 +71,8 @@ export function Locations() {
 
   const {error, locations, showInfoPath} = values;
   return mir ? <Box flex>
-    <Heading>Github CSV files</Heading>
-    <Paragraph>The root source files</Paragraph>
+    <Heading>Locations</Heading>
+    <Paragraph>Aggregate locations for data (in US)</Paragraph>
     {error ? <Text color="status-error">{error}</Text> : ''}
     <LocationsContent mir={mir} {...values} />
   </Box> : '';
