@@ -3,7 +3,6 @@ import React, {useEffect, useState} from 'react';
 import {Mirror} from '@wonderlandlabs/mirror';
 import axios from "axios";
 import {LocationsContent} from "./LocationsContent";
-import {S3FileInfo} from "./S3FileInfo";
 
 export function Locations() {
   const [values, setValues] = useState({});
@@ -71,12 +70,10 @@ export function Locations() {
 
 
   const {error, locations, showInfoPath} = values;
-  console.log('VALUES:', values);
   return mir ? <Box flex>
     <Heading>Github CSV files</Heading>
     <Paragraph>The root source files</Paragraph>
     {error ? <Text color="status-error">{error}</Text> : ''}
-    <S3FileInfo mir={mir} locations={locations} showInfoPath={showInfoPath}/>
     <LocationsContent mir={mir} {...values} />
   </Box> : '';
 }
