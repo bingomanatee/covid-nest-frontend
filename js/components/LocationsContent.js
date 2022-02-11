@@ -14,7 +14,7 @@ function makeClick(path) {
     });
 }
 
-export function GithubCsvContent({mir, data, showInfoPath, error, loadState, sourceFiles}) {
+export function LocationsContent({mir, data, showInfoPath, error, loadState, sourceFiles}) {
 
   function makeSavedClick(path) {
     return () => {

@@ -37,6 +37,6 @@ export function SiteHeader() {
     <Button onClick={onClickGithub} icon={<Github color="white"></Github>}
       label={<Text size="small" color="white">Source Files</Text>}></Button>
     <Button onClick={onClickLocation} icon={<Location color="white"></Location>}
-      label={<Text size="small" color="white">Source Files</Text>}></Button>
+      label={<Text size="small" color="white">Locations</Text>}></Button>
   </Header>;
 }
