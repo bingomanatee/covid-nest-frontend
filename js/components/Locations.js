@@ -11,7 +11,6 @@ export function Locations() {
 
   useEffect(() => {
     const dataMir = new Mirror({
-      data: [],
       loadState: 'start',
       error: false,
       locations: [],
@@ -23,8 +22,7 @@ export function Locations() {
         onLoad(mir, result) {
           let {data} = result;
           if (!Array.isArray(data)) {
-            data = {
-            };
+            data = [];
             // return mir.$do.onLoadError(new Error('bad data'));
           }
           mir.$do.setData(data);
@@ -56,7 +54,7 @@ export function Locations() {
         },
         loadLocations(mir) {
           mir.$do.setLocationsLoadStatus('starting');
-          axios.get('/api/source-files')
+          axios.get('/api/locations')
             .then(mir.$do.onLoadLocations)
             .catch(mir.$do.onLoadSourceFileError);
         }
